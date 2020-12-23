@@ -4,10 +4,11 @@ I18n.load_translations_path File.join(__dir__, 'locales', '*.yml')
 
 Mumukit.runner_name = 'javascript'
 Mumukit.configure do |config|
-  config.docker_image = 'mumuki/mumuki-mocha-worker'
+  config.docker_image = 'mumuki/mumuki-mocha-node12-worker'
   config.structured = true
   config.stateful = true
   config.content_type = 'markdown'
+  config.command_time_limit = 6
 end
 
 require_relative './version'

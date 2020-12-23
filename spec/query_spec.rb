@@ -174,16 +174,13 @@ describe JavascriptQueryHook do
       it { expect(result[0]).to eq %q{!;
                                ^
 
-SyntaxError: Unexpected token ;} }
+SyntaxError: Unexpected token ';'} }
       it { expect(result[1]).to eq :errored }
     end
 
     context 'with unclosed curly braces' do
       let(:request) { struct(query: 'function () {') }
-      it { expect(result[0]).to eq %q`});
- ^
-
-SyntaxError: Unexpected token )` }
+      it { expect(result[0]).to include %q`SyntaxError: Unexpected end of input` }
       it { expect(result[1]).to eq :errored }
     end
   end

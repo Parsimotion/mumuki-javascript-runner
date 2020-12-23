@@ -11,7 +11,7 @@ describe 'runner' do
   after(:all) { Process.kill 'TERM', @pid }
 
   it 'prevents malicious net related code' do
-    response = bridge.run_tests!(test: 'var http = require("http"); describe("foo", () => it("bar", (done) => foo(http, done)))',
+    response = bridge.run_tests!(test: 'var http = require("http"); describe("foo", () => it("bar", (done) => foo(http, done)).timeout(6000))',
                                  extra: '',
                                  expectations: [],
                                  content: <<-javascript
@@ -20,7 +20,7 @@ function foo(http, done) {
 }
 javascript
     )
-    expect(response[:test_results][0][:result]).to include('getaddrinfo ENOTFOUND')
+    expect(response[:test_results][0][:result]).to include('getaddrinfo EAI_AGAIN')
     expect(response[:status]).to eq(:failed)
   end
 
@@ -93,7 +93,7 @@ javascript
 
   it 'answers a valid hash when submission timeouts' do
     response = bridge.
-        run_tests!(test: 'describe("foo", () => it("bar", function (done) { this.timeout(5000); setTimeout(() => { assert.equal(x, 3); done() }, 5000) }))',
+        run_tests!(test: 'describe("foo", () => it("bar", function (done) { this.timeout(7000); setTimeout(() => { assert.equal(x, 3); done() }, 7000) }))',
                    extra: '',
                    content: 'var x = 2',
                    expectations: [])
@@ -103,7 +103,7 @@ javascript
                            status: :aborted,
                            feedback: '',
                            expectation_results: [{binding: 'x', inspection: 'HasTooShortIdentifiers', result: :failed}],
-                           result: 'Execution time limit of 4s exceeded. Is your program performing an infinite loop or recursion?')
+                           result: 'Execution time limit of 6s exceeded. Is your program performing an infinite loop or recursion?')
   end
 
 
@@ -117,7 +117,7 @@ javascript
     expect(response[:status]).to eq :errored
     expect(response[:response_type]).to eq(:unstructured)
     expect(response[:test_results]).to be_empty
-    expect(response[:result]).to include('SyntaxError: Unexpected token )')
+    expect(response[:result]).to include('SyntaxError: Unexpected token \')\'')
 
   end
 
