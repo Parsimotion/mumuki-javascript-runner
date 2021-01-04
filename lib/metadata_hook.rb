@@ -3,13 +3,13 @@ class JavascriptMetadataHook < Mumukit::Hook
     {language: {
         name: 'javascript',
         icon: {type: 'devicon', name: 'javascript'},
-        version: '4.2.4',
+        version: '12',
         extension: 'js',
         ace_mode: 'javascript'
     },
      test_framework: {
          name: 'mocha',
-         version: '2.4.5',
+         version: '2.5.3',
          test_extension: '.js',
          template: <<js
 describe("{{ test_template_group_description }}", function() {

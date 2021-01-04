@@ -25,7 +25,7 @@ javascript
   end
 
   def command_line(filename)
-    "mocha #{filename} -R json"
+    "./node_modules/mocha/bin/mocha #{filename} -R json"
   end
 
   def to_structured_result(result)

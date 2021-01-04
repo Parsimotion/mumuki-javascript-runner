@@ -4,7 +4,7 @@ I18n.load_translations_path File.join(__dir__, 'locales', '*.yml')
 
 Mumukit.runner_name = 'javascript'
 Mumukit.configure do |config|
-  config.docker_image = 'mumuki/mumuki-mocha-node12-worker'
+  config.docker_image = 'productecaregistry.azurecr.io/docker/mumuki-mocha-worker-node12:1.0'
   config.structured = true
   config.stateful = true
   config.content_type = 'markdown'
