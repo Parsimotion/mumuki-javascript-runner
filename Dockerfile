@@ -1,5 +1,5 @@
 FROM ruby:2.6.3
-RUN gem install bundler -v 2.1
+RUN gem install bundler -v 2.1 && gem install rake -v 10.0
 
 WORKDIR /code
 COPY . /code
