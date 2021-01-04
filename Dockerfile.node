@@ -1,4 +1,0 @@
-FROM node:12-alpine
-MAINTAINER Federico Scarpa
-
-RUN npm install -g mocha@2.4.5 chai
