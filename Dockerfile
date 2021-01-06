@@ -6,6 +6,6 @@ ENV RACK_ENV development
 WORKDIR /code
 
 COPY . /code
-RUN bundle install
+RUN bundle config set without 'development test' && bundle install
 
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "9000"]
+CMD [ "/bin/sh", "run.sh" ]
