@@ -6,7 +6,9 @@ class JavascriptTestHook < Mumukit::Templates::FileHook
 <<javascript
 'use strict';
 
-var assert = require('assert');
+const assert = require('assert');
+const _ = require('lodash');
+const Bluebird = require('bluebird');
 
 #{request.extra}
 #{request.content}
