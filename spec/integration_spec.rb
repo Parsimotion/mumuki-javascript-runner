@@ -61,7 +61,7 @@ javascript
                            result: '')
   end
 
-  xit 'answers a valid hash when submission is ok with warnings' do
+  it 'answers a valid hash when submission is ok with warnings' do
     response = bridge.run_tests!(test: 'describe("foo", () => it("bar", () => assert.equal(x, 3)))',
                                  extra: '',
                                  content: 'var x = 3',
@@ -91,7 +91,7 @@ javascript
                            result: '')
   end
 
-  xit 'answers a valid hash when submission timeouts' do
+  it 'answers a valid hash when submission timeouts' do
     response = bridge.
         run_tests!(test: 'describe("foo", () => it("bar", function (done) { this.timeout(7000); setTimeout(() => { assert.equal(x, 3); done() }, 7000) }))',
                    extra: '',

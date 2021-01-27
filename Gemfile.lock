@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     mumuki-javascript-runner (1.6.1)
-      mulang (~> 5.3)
       mumukit (~> 2.30)
 
 GEM
