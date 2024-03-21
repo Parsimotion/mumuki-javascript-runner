@@ -1,20 +1,56 @@
 name: Deploy
 
 on:
+  workflow_dispatch:
   push:
     branches: [master, main]
 
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
+
 jobs:
-  call-deploy:
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: Parsimotion/workflows/.github/workflows/generic.yml@main
-    with:
-      commands: ${{vars.COMMANDS}}
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  uploadACR:
+    name: Upload to ACR
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        commands: ${{ fromJSON(vars.commands) }}
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v1
+
+      - name: Install JQ
+        if: ${{ inputs.jq }}
+        run: sudo apt-get install -y jq
+
+      - name: Remove node_modules
+        if: ${{ inputs.node }}
+        run: rm -rf node_modules
+
+      - name: Setup node version
+        if: ${{ inputs.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+
+      - name: Authenticate with NPM
+        if: ${{ inputs.node }}
+        run: echo "//registry.npmjs.org/:_authToken=${{ env.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Install Dependencies
+        if: ${{ inputs.node }}
+        run: npm ci
+
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.DOCKER_REGISTRY_NAME }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Push to ACR
+        run: ${{ matrix.commands }}
