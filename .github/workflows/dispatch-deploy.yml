@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master, main]
+
+jobs:
+  call-deploy:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: Parsimotion/workflows/.github/workflows/generic.yml@main
+    with:
+      commands: ${{vars.COMMANDS}}
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
