@@ -3,3 +3,7 @@ escualo_rsa.pub
 
 .idea
 bin/mulang
+
+site.config
+*.env
+*.env.*
